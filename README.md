@@ -21,6 +21,43 @@ $ docker-compose run web ./manage.py createsuperuser
 
 Для тонкой настройки Docker Compose используйте переменные окружения. Их названия отличаются от тех, что задаёт docker-образа, сделано это чтобы избежать конфликта имён. Внутри docker-compose.yaml настраиваются сразу несколько образов, у каждого свои переменные окружения, и поэтому их названия могут случайно пересечься. Чтобы не было конфликтов к названиям переменных окружения добавлены префиксы по названию сервиса. Список доступных переменных можно найти внутри файла [`docker-compose.yml`](./docker-compose.yml).
 
+## Запуск в кластере Minikube
+
+Установите minikube в virtualbox:
+```
+minikube start --driver=virtualbox
+```
+Запустите ingress:
+```
+minikube addons enable ingress
+```
+Часть настроек берётся из переменных окружения. Чтобы их определить, откройте файл ConfigMap.yaml и запишите туда данные в таком формате: ПЕРЕМЕННАЯ=значение.
+`SECRET_KEY`
+`DEBUG`
+`ALLOWED_HOSTS`
+`DATABASE_URL`
+
+Установите [Helm](https://helm.sh/)
+
+Добавьте Bitnami
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+Установите PostgreSQL:
+```
+helm install my-postgresql bitnami/postgresql --set postgresqlPassword=password,postgresqlUsername=myuser
+```
+Запустите манифесты:
+```
+kubectl apply -f django-app.yaml
+```
+```
+kubectl apply -f ingress.yaml
+```
+```
+kubectl apply -f clearsessions-cronjob.yaml
+```
+
 ## Переменные окружения
 
 Образ с Django считывает настройки из переменных окружения:
