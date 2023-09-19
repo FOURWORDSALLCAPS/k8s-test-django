@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Pod
+kind: Deployment
 metadata:
   name: django-app
   labels:
@@ -21,9 +21,23 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: DJANGO_DB_HOST
-              value: ""
-            - name: DJANGO_DB_PORT
-              value: ""
-            - name: DJANGO_SECRET_KEY
-              value: ""
+            - name: SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: SECRET_KEY
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: DATABASE_URL
+            - name: ALLOWED_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: ALLOWED_HOSTS
+            - name: DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: DEBUG

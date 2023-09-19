@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-config
+  labels:
+    app: django
+data:
+  SECRET_KEY: ""
+  DATABASE_URL: ""
+  ALLOWED_HOSTS: ""
+  DEBUG: ""
