@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: django-app
+  labels:
+    env: prod
+    app: ks8-django
+spec:
+  selector:
+    matchLabels:
+      project: django
+  template:
+    metadata:
+      labels:
+        project: django
+    spec:
+      containers:
+        - name: django
+          image: django_app
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: DJANGO_DB_HOST
+              value: ""
+            - name: DJANGO_DB_PORT
+              value: ""
+            - name: DJANGO_SECRET_KEY
+              value: ""
