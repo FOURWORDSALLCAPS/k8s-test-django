@@ -55,7 +55,7 @@ kubectl apply -f django-app.yaml
 kubectl apply -f ingress.yaml
 ```
 ```
-kubectl apply -f clearsessions-cronjob.yaml
+kubectl apply -f django-clearsessions.yaml
 ```
 
 ## Переменные окружения
