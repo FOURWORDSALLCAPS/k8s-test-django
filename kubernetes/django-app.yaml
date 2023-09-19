@@ -41,3 +41,58 @@ spec:
                 configMapKeyRef:
                   name: django-config
                   key: DEBUG
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migrate
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      containers:
+        - name: django-migrate
+          image: django_app
+          imagePullPolicy: IfNotPresent
+          command: ["python", "manage.py", "migrate", "--no-input"]
+          ports:
+            - containerPort: 80
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: SECRET_KEY
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: DATABASE_URL
+            - name: ALLOWED_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: ALLOWED_HOSTS
+            - name: DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: django-config
+                  key: DEBUG
+      restartPolicy: OnFailure
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-service
+  labels:
+    app: django
+spec:
+    type: LoadBalancer
+    selector:
+        project: django
+    ports:
+      - name: django-port
+        protocol: TCP
+        port: 80
+        targetPort: 80
+        nodePort: 30000
