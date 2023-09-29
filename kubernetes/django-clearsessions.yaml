@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
             - name: django-clearsessions
-              image: django_app
+              image: smurfzxc/k8s-test-django:latest
               imagePullPolicy: IfNotPresent
               command: ["python", "manage.py", "clearsessions"]
               ports:

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: django_app
+          image: smurfzxc/k8s-test-django:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
         - name: django-migrate
-          image: django_app
+          image: smurfzxc/k8s-test-django:latest
           imagePullPolicy: IfNotPresent
           command: ["python", "manage.py", "migrate", "--no-input"]
           ports:
