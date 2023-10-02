@@ -58,6 +58,46 @@ kubectl apply -f ingress.yaml
 kubectl apply -f django-clearsessions.yaml
 ```
 
+## Запуск в облаке
+
+Рабочая версия сайта [k8s-test-django](https://edu-dreamy-goodall.sirius-k8s.dvmn.org/admin/login/?next=/admin/)
+
+Часть настроек берётся из переменных окружения. Чтобы их определить, откройте файл ConfigMap.yaml и запишите туда данные в таком формате: ПЕРЕМЕННАЯ=значение.
+`SECRET_KEY`
+`DEBUG`
+`ALLOWED_HOSTS`
+`DATABASE_URL`
+
+Установите [Helm](https://helm.sh/)
+
+Добавьте Bitnami
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+Установите PostgreSQL:
+```
+helm install my-postgresql bitnami/postgresql --namespace <your_namespace>
+```
+Заполните манифест файл ingress-prod.yaml:
+- host: your.host.ru
+
+Заполните манифест файл django-app-prod.yaml:
+- nodePort: your_nodePort
+
+Запустите манифесты:
+```
+kubectl apply -f ConfigMap-prod.yaml
+```
+```
+kubectl apply -f django-app-prod.yaml
+```
+```
+kubectl apply -f ingress-prod.yaml
+```
+```
+kubectl apply -f django-clearsessions-prod.yaml
+```
+
 ## Переменные окружения
 
 Образ с Django считывает настройки из переменных окружения:

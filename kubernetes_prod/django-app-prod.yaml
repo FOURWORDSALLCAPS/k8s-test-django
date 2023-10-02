@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django-app
+  name: my-django-app
   labels:
-    app: ks8-django
+    app: my-ks8-django
 spec:
   selector:
     matchLabels:
@@ -87,7 +87,7 @@ metadata:
   labels:
     app: django
 spec:
-    type: LoadBalancer
+    type: NodePort
     selector:
         project: django
     ports:
@@ -95,4 +95,4 @@ spec:
         protocol: TCP
         port: 80
         targetPort: 80
-        nodePort: 30000
+        nodePort: your_nodePort

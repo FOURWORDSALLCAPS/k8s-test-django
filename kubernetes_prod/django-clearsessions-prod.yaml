@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: django-clearsessions
+spec:
+  schedule: "0 0 * * *"
+  startingDeadlineSeconds: 20
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 100
+      template:
+        spec:
+          containers:
+            - name: django-clearsessions
+              image: smurfzxc/k8s-test-django:latest
+              imagePullPolicy: IfNotPresent
+              command: ["python", "manage.py", "clearsessions"]
+              ports:
+                - containerPort: 80
+              env:
+                - name: SECRET_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: django-config
+                      key: SECRET_KEY
+                - name: DATABASE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: django-config
+                      key: DATABASE_URL
+                - name: ALLOWED_HOSTS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: django-config
+                      key: ALLOWED_HOSTS
+                - name: DEBUG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: django-config
+                      key: DEBUG
+          restartPolicy: OnFailure
